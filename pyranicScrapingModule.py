@@ -60,14 +60,14 @@ def relatedSearches(query, num_results=10):
 
 def getQuestions(query,num_results=10,headless=True,gpu=False)->list:
     options = Options()
-    options.add_argument('--headless')
+    
 
     if(headless): options.add_argument('--headless')
     if(not gpu): options.add_argument('--disable-gpu')
 
     driver = webdriver.Chrome(chrome_options=options)
-
-    driver.get(f"https://google.com/search?q=what+is+{query}")
+    query = "+".join(query.split(" "))
+    driver.get(f"https://google.com/search?q={query}")
 
     question_answers = []
 
@@ -80,4 +80,41 @@ def getQuestions(query,num_results=10,headless=True,gpu=False)->list:
         question_answers.append(question)
         i+=1
 
+    driver.close()
+
     return question_answers
+
+
+def get_keywords(query,headless=True,gpu=False)->list:
+    options = Options()
+    
+    if(headless): options.add_argument('--headless')
+    if(not gpu): options.add_argument('--disable-gpu')
+
+    driver = webdriver.Chrome(options)
+    query = "+".join(query.split(" "))
+    driver.get(f"https://google.com/search?q={query}")
+
+    relatedKw = []
+
+
+
+    row = 1
+    column = 1
+    while(column<=2):
+        try:
+            kword = driver.find_element_by_xpath(f"/html/body/div[7]/div/div[9]/div[1]/div/div[4]/div/div/div/div/div/div/div/div[{column}]/div[{row}]/a/div[2]").text
+            relatedKw.append(kword)
+
+        except:
+            pass
+
+        if(row==4):
+            row = 1
+            column+=1
+        row+=1
+        
+        
+    
+    driver.close()
+    return relatedKw
