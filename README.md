@@ -1,2 +1,2 @@
-# psm
-pyranic kwscraping and analytic tool
+# PSM
+Pyranic Scraping and Analytic tool
